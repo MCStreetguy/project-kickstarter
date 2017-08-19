@@ -2,10 +2,11 @@
   "name": "project-kickstarter",
   "version": "1.0.0",
   "description": "Will be added soon",
-  "main": "main.js",
   "bin": {
-    "test": "bin/test.js"
+    "kickstarter": "bin/kickstarter.js",
+    "kickstart": "bin/kickstart.js"
   },
+  "preferGlobal": "true",
   "author": "Maximilian Schmidt",
   "license": "MIT"
 }
