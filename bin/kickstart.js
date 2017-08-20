@@ -6,6 +6,7 @@ const path = require('path')
 const _console = require('./logger.js');
 const targz = require('targz');
 const git_clone = require('git-clone');
+const rmrf = require('rimraf');
 const current_dir = process.cwd();
 const config_dir = path.join(os.homedir(),'.kickstarter');
 const util = require('./util.js');
@@ -49,7 +50,13 @@ if(process.argv.length > 0) {
     var repo = JSON.parse(fs.readFileSync(path.join(config_dir,'git-links',name+'.link'))).repo;
     try {
       git_clone(repo, dir, function(err) {
-        _console.log('Wroom Wroooom. Project has been kickstarted and is ready to go ;)');
+        rmrf(path.join(dir,'.git'),function(err) {
+          if(err) {
+            _console.err(err);
+          } else {
+            _console.log('Wroom Wroooom. Project has been kickstarted and is ready to go ;)');
+          }
+        });
       });
     } catch (e) {
       _console.err('Something went wrong while cloning your repo: '+repo);
