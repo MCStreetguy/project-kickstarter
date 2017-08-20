@@ -1,7 +1,7 @@
 {
   "name": "project-kickstarter",
   "version": "1.0.0",
-  "description": "Will be added soon",
+  "description": "A small tool based on Node.js for managing project blueprints.",
   "repository": "https://github.com/MCStreetguy/project-kickstarter",
   "bin": {
     "kickstarter": "bin/kickstarter.js",
