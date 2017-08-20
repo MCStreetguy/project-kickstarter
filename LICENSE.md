@@ -1,6 +1,6 @@
 # License Information
 This project is licensed under the MIT License.
-*(this is a beautified version of the license, you find the original here: (LICENSE)[LICENSE])*
+*(this is a beautified version of the original license)*
 
 ### Copyright (c) 2017 Maximilian Schmidt**
 
