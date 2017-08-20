@@ -28,9 +28,7 @@ if(process.argv.length > 0) {
       var dir = process.cwd();
     }
 
-    var temp2 = path.join(config_dir,'blueprints',name+'.tar.gz');
-    _console.log(temp2);
-    var output = fs.createWriteStream(temp2);
+    var output = fs.createWriteStream(path.join(config_dir,'blueprints',name+'.tar.gz'));
     var archive = archiver('tar',{
       gzip: true,
       zlib: {level: 9}
@@ -46,8 +44,17 @@ if(process.argv.length > 0) {
     });
     archive.pipe(output);
 
-    var contents = util.readDirRecursive(dir);
-    _console.log(contents);
+    var contents = fs.readdirSync(dir);
+    contents.forEach(function(e) {
+      if(fs.statSync(path.join(dir,e)).isDirectory()) {
+        if(e != 'node_modules' && e != '.git') {
+          archive.directory(path.join(dir,e),e);
+        }
+      } else {
+        archive.file(path.join(dir,e),{name: e});
+      }
+    });
+    archive.finalize();
 
   } else if(type == 'link') {
     _console.log('TODO: Add code for linking a git repo');
