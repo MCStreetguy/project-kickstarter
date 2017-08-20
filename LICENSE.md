@@ -2,7 +2,7 @@
 This project is licensed under the MIT License.
 *(this is a beautified version of the original license)*
 
-### Copyright (c) 2017 Maximilian Schmidt**
+### Copyright (c) 2017 Maximilian Schmidt
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated files (the "Software"), to deal
@@ -18,6 +18,6 @@ authors or copyright holders be liable for any claim, damages or other
 liablitiy, whether in an action of contract, tort or otherwise, arising from,
 out of or in connection with the software or the use or other dealings in the software**
 
-### external sources
+### Externals
 
-All external sources are subject to their licenses and respective copyright holders.
+All external sources and modules are subject to their licenses and respective copyright holders.
