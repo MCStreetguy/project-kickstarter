@@ -10,8 +10,6 @@ via npm: `npm install project-kickstarter -g`
 
 After installing the package globally, you can use the following commands in the terminal:
 
-#### kickstarter
-
 ```
 kickstarter cmd <options>
 ```
@@ -24,8 +22,10 @@ kickstarter cmd <options>
 | remove | Removes a blueprint or git-link. | **name** *(required)*: The name of the blueprint or git-link that should be deleted |
 | help | Displays an overview of these commands. | - |
 
-#### kickstart
-
 ```
 kickstart name
 ```
+
+| description | options |
+|-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Kickstart a new project | **name** *(required)*: The name of the blueprint or git-link. **path**: The directory where the project should be kickstarted, defaults to the current directory. |
