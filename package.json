@@ -8,5 +8,8 @@
   },
   "preferGlobal": "true",
   "author": "Maximilian Schmidt",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "^2.0.0"
+  }
 }
