@@ -4,18 +4,56 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path')
 const _console = require('./logger.js');
+const targz = require('targz');
 const current_dir = process.cwd();
 const config_dir = path.join(os.homedir(),'.kickstarter');
-
-try {
-  fs.statSync(config_dir);
-} catch(e) {
-  fs.mkdirSync(config_dir);
-}
-
-if(!fs.existsSync(path.join(config_dir,'config.json'))) {
-  fs.writeFileSync(path.join(config_dir,'config.json'),fs.readFileSync(path.join(__dirname,'..','conf','default.json')));
-}
-const config = JSON.parse(fs.readFileSync(path.join(config_dir,'config.json')));
+const util = require('./util.js');
+util.mkdir(config_dir);
+util.mkdir(path.join(config_dir,'blueprints'));
+util.mkdir(path.join(config_dir,'git-links'));
 
 _console.log('TODO: everything..');
+process.argv.splice(0,2);
+if(process.argv.length > 0) {
+
+  var name = process.argv.splice(0,1);
+  if(process.argv.length > 0) {
+    var dir = process.argv.splice(0,1);
+    if(!path.isAbsolute(dir)) {
+      dir = path.join(process.cwd(),dir);
+    }
+  } else {
+    var dir = process.cwd();
+  }
+
+  var archives = fs.readdirSync(path.join(config_dir,'blueprints'));
+  var links = fs.readdirSync(path.join(config_dir,'git-links'));
+  if(archives.indexOf(name+'.tar.gz') >= 0) {
+
+    targz.decompress({
+      src: path.join(config_dir,'blueprints',name+'.tar.gz'),
+      dest: dir,
+      gz: {
+        level: 9
+      }
+    }, function(err) {
+      if(err) {
+        _console.err(err);
+      } else {
+        _console.log('Wroom Wroooom. Project has been kickstarted and is ready to go ;)');
+      }
+    });
+
+  } else if(links.indexOf(name+'.link') >= 0) {
+
+    _console.log('Sorry, Git-feautures coming soon..');
+
+  } else {
+
+    _console.warn('No blueprints or links are available.');
+
+  }
+
+} else {
+  _console.err('No blueprint or link specified.');
+}

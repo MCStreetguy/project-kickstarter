@@ -4,7 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path')
 const _console = require('./logger.js');
-const archiver = require('archiver');
+const targz = require('targz');
 const current_dir = process.cwd();
 const config_dir = path.join(os.homedir(),'.kickstarter');
 const util = require('./util.js');
@@ -27,39 +27,30 @@ if(process.argv.length > 0) {
       var dir = process.cwd();
     }
 
-    var output = fs.createWriteStream(path.join(config_dir,'blueprints',name+'.tar.gz'));
-    var archive = archiver('tar',{
-      gzip: true,
-      zlib: {level: 9}
-    });
-    output.on('close',function() {
-      _console.log('Tracing successful. New blueprint available: '+name);
-    });
-    archive.on('warning',function(err) {
-      throw err;
-    });
-    archive.on('error',function(err) {
-      throw err;
-    });
-    archive.pipe(output);
-
-    var contents = fs.readdirSync(dir);
-    contents.forEach(function(e) {
-      if(fs.statSync(path.join(dir,e)).isDirectory()) {
-        if(e != 'node_modules' && e != '.git') {
-          archive.directory(path.join(dir,e),e);
+    targz.compress({
+      src: dir,
+      dest: path.join(config_dir,'blueprints',name+'.tar.gz'),
+      tar: {
+        ignore: function(e) {
+          return (path.basename(e) == '.git' || path.basename(e) == 'node_modules');
         }
+      },
+      gz: {
+        level: 9
+      }
+    }, function(err) {
+      if(err) {
+        _console.err(err);
       } else {
-        archive.file(path.join(dir,e),{name: e});
+        _console.log('Tracing successful. New blueprint available: '+name);
       }
     });
-    archive.finalize();
 
   } else if(type == 'link' && process.argv.length > 1) {
 
     var name = process.argv.splice(0,1);
     var repo = process.argv.splice(0,1);
-    fs.writeFileSync(path.join(config_dir,'git-links',name+'.link'),JSON.stringify({repo: repo}));
+    fs.writeFileSync(path.join(config_dir,'git-links',name+'.link'),JSON.stringify({repo: repo.toString()}));
     _console.log('Linking successful. New git-link available: '+name);
 
   } else if(type == 'list') {
@@ -101,6 +92,19 @@ if(process.argv.length > 0) {
     } else {
       _console.warn('No blueprint or link could be found for you query: '+name);
     }
+
+  } else if(type == 'help') {
+
+    console.log('Command Reference:');
+    console.log('-------------------------');
+    console.log('kickstarter help - Displays this help message');
+    console.log('kickstarter trace name <path> - Create a new blueprint');
+    console.log('kickstarter link name repo - Create a new git-link');
+    console.log('kickstarter list - List all available blueprints and links');
+    console.log('kickstarter remove name - Removes a blueprint or link');
+    console.log('-------------------------');
+    console.log('kickstart name <path> - Kickstarts a new project');
+    console.log('-------------------------');
 
   } else {
     _console.err('Invalid params.');
