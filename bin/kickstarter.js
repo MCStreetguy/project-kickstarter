@@ -14,12 +14,12 @@ util.mkdir(path.join(config_dir,'git-links'));
 
 process.argv.splice(0,2);
 if(process.argv.length > 0) {
-  var type = process.argv.splice(0,1);
+  var type = process.argv.splice(0,1).toString();
   if(type == 'trace' && process.argv.length > 0) {
 
-    var name = process.argv.splice(0,1);
+    var name = process.argv.splice(0,1).toString();
     if(process.argv.length > 0) {
-      var dir = process.argv.splice(0,1);
+      var dir = process.argv.splice(0,1).toString();
       if(!path.isAbsolute(dir)) {
         dir = path.join(process.cwd(),dir);
       }
@@ -48,8 +48,8 @@ if(process.argv.length > 0) {
 
   } else if(type == 'link' && process.argv.length > 1) {
 
-    var name = process.argv.splice(0,1);
-    var repo = process.argv.splice(0,1);
+    var name = process.argv.splice(0,1).toString();
+    var repo = process.argv.splice(0,1).toString();
     fs.writeFileSync(path.join(config_dir,'git-links',name+'.link'),JSON.stringify({repo: repo.toString()}));
     _console.log('Linking successful. New git-link available: '+name);
 
@@ -70,7 +70,7 @@ if(process.argv.length > 0) {
 
   } else if(type == 'remove' && process.argv.length > 0) {
 
-    var name = process.argv.splice(0,1);
+    var name = process.argv.splice(0,1).toString();
     var archives = fs.readdirSync(path.join(config_dir,'blueprints'));
     var links = fs.readdirSync(path.join(config_dir,'git-links'));
     if(archives.indexOf(name+'.tar.gz') >= 0) {

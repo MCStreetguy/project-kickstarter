@@ -11,6 +11,7 @@
   "author": "Maximilian Schmidt",
   "license": "MIT",
   "dependencies": {
+    "git-clone": "^0.1.0",
     "targz": "^1.0.1"
   }
 }
