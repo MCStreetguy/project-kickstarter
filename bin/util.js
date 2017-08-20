@@ -25,3 +25,11 @@ var readDirRecursive = function(dir) {
   return filelist;
 }
 exports.readDirRecursive = readDirRecursive;
+
+exports.ask = function(text, callback) {
+  process.stdin.resume();
+  process.stdout.write('[Kickstarter] '+text);
+  process.stdin.once('data', function(data) {
+      callback(data.toString().trim());
+  });
+}

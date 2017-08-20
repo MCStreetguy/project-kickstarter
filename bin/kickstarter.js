@@ -15,7 +15,6 @@ util.mkdir(path.join(config_dir,'git-links'));
 process.argv.splice(0,2);
 if(process.argv.length > 0) {
   var type = process.argv.splice(0,1);
-  _console.log(type);
   if(type == 'trace' && process.argv.length > 0) {
 
     var name = process.argv.splice(0,1);
@@ -56,12 +55,53 @@ if(process.argv.length > 0) {
     });
     archive.finalize();
 
-  } else if(type == 'link') {
-    _console.log('TODO: Add code for linking a git repo');
+  } else if(type == 'link' && process.argv.length > 1) {
+
+    var name = process.argv.splice(0,1);
+    var repo = process.argv.splice(0,1);
+    fs.writeFileSync(path.join(config_dir,'git-links',name+'.link'),JSON.stringify({repo: repo}));
+    _console.log('Linking successful. New git-link available: '+name);
+
   } else if(type == 'list') {
-    _console.log('TODO: Add code for listing all blueprints');
-  } else if(type == 'remove') {
-    _console.log('TODO: Add code for removing a blueprint');
+
+    var archives = fs.readdirSync(path.join(config_dir,'blueprints'));
+    var links = fs.readdirSync(path.join(config_dir,'git-links'));
+    if(archives.length+links.length > 0) {
+      archives.forEach(function(e,i,a) {
+        _console.log('(Blueprint) '+path.basename(e,'.tar.gz'));
+      });
+      links.forEach(function(e,i,a) {
+        _console.log('(Git-link) '+path.basename(e,'.link'));
+      });
+    } else {
+      _console.warn('No blueprints or links are available.');
+    }
+
+  } else if(type == 'remove' && process.argv.length > 0) {
+
+    var name = process.argv.splice(0,1);
+    var archives = fs.readdirSync(path.join(config_dir,'blueprints'));
+    var links = fs.readdirSync(path.join(config_dir,'git-links'));
+    if(archives.indexOf(name+'.tar.gz') >= 0) {
+      util.ask('Are you sure to remove the blueprint '+name+'? (YES) ',function(input) {
+        if(input.toUpperCase() == 'YES' || input.toUpperCase() == 'Y') {
+          fs.unlinkSync(path.join(config_dir,'blueprints',name+'.tar.gz'));
+          _console.log(name+' was successfully deleted.');
+        }
+        process.stdin.pause();
+      });
+    } else if(links.indexOf(name+'.link') >= 0) {
+      util.ask('Are you sure to remove the link '+name+'? (YES) ',function(input) {
+        if(input.toLowerCase() == 'yes' || input.toLowerCase() == 'y') {
+          fs.unlinkSync(path.join(config_dir,'git-links',name+'.link'));
+          _console.log(name+' was successfully deleted.');
+        }
+        process.stdin.pause();
+      });
+    } else {
+      _console.warn('No blueprint or link could be found for you query: '+name);
+    }
+
   } else {
     _console.err('Invalid params.');
   }
